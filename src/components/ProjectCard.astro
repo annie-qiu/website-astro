@@ -1,0 +1,26 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+	category?: string;
+  imageUrl: string;
+  url: string;
+  year?: string;
+}
+
+const { title, description, category, imageUrl, url, year } = Astro.props;
+import { Image } from 'astro:assets';
+---
+
+<div class="flex flex-col space-y-2 max-w-md">
+  <div class="flex flex-col">
+    <a href={url}>{title}</a>
+    <div class="mono text-xs">{category}</div>
+  </div>
+  <div class="flex flex-col space-y-2">
+    <a href={url}>
+      <Image src={imageUrl} alt={title} width="1183" height="737" class="hover:opacity-80 hover:transition-all transition"/>
+    </a>
+    <span class="light-text text-sm">{description}</span>
+  </div>
+</div>

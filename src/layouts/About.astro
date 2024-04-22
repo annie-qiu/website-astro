@@ -1,0 +1,16 @@
+---
+const { frontmatter } = Astro.props;
+import "../styles/global.scss";
+import SplitLayout from "./SplitLayout.astro";
+---
+
+<SplitLayout title={frontmatter.title}>
+  <div class="sm:w-4/5 p-6 sm:p-8 md:p-10 lg:px-16 mt-2">
+    <img src="/assets/profpic.png" width="300" height="300" alt="profile picture" class="mb-8"/>
+    <span class="text-5xl font-light title">Hello!</span>
+    <p class="mono">{frontmatter.description}</p>
+    <div class="light-text">
+      <slot/>
+    </div>
+  </div>
+</SplitLayout>

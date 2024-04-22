@@ -1,0 +1,67 @@
+@import url("https://use.typekit.net/fen8xlb.css");
+
+:root {
+  --gradient-linear: linear-gradient(#65a7e4ff 0%, #96c5e5ff 10.15625%, #b8dae6ff 23.4375%, #deddd2ff 37.5%, #e6ddc7ff 45.83333432674408%, #f0d1c0ff 63.02083134651184%, #ffd0d0ff 83.33333134651184%); 
+}
+
+.mono {
+  font-family: 'DM Mono';
+  font-weight: 300;
+}
+
+.title {
+  font-family: 'ivypresto-headline'
+}
+
+.label {
+  font-size: x-small;
+}
+
+.index-section-title {
+  font-size: small;
+}
+
+.light-text {
+  color: #3B654A;
+  p {
+    color: #3B654A;
+  }
+}
+
+span, p, div {
+  color: #0D4A22;
+}
+
+p {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  img {
+    margin-bottom: 1.75rem;
+  }
+}
+
+body {
+  background-color: #F7F8F1;
+  overflow: hidden;
+  height: 100vh;
+  font-weight: 400;
+}
+
+#title-display {
+  // background: var(--gradient-linear);
+}
+
+.link {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: all 0.15s ease;
+}
+
+.link:hover {
+  color: #BB6D41;
+  // color: #53956D;
+}
+
+::selection {
+  background: #EAF3DF;
+}
