@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+
+const images = await import.meta.glob<{ default: ImageMetadata }>(
+    "../assets/play/**/*.{jpeg,jpg,png,JPG,PNG,gif}"
+  );
+const resolvedImages = await Promise.all(
+    Object.values(images).map((image) => image().then((file) => file.default))
+  );
+---
+
+<Layout title="Play">
+  <div><a class="" href="/">← back</a></div>
+  <br>
+  <div class="text-base mt-2 mb-4 text-center">Play</div>
+  <div class="text-sm m-auto mb-4 text-center max-w-[40em] text-dark-green/80">
+    An assortment of illustations, animations, and experiments. Digital drawings done in Procreate or Heavypaint.
+  </div>
+  <br>
+  <div class="container sm:columns-2 max-w-[60em] m-auto gap-4 sm:gap-10">
+    {resolvedImages.map((image) => (
+    <div class="mb-4 sm:mb-10 container">
+      <Image src={image} inferSize alt="hi" class="rounded-sm"/>
+    </div>
+    ))}
+  </div>
+</Layout>

@@ -25,7 +25,7 @@ export const projectsList: Project[] = [
     year: "2021",
   },
   {
-    title: "Sexual Violence Prevention Program",
+    title: "SVPP",
     description: "Managing Dartmouth’s sexual violence prevention curriculum",
     category: "Code, UI/UX",
     imageUrl: "/assets/thumbnails/svpp.png",
@@ -41,7 +41,7 @@ export const projectsList: Project[] = [
     year: "2021",
   },
   {
-    title: "Presidential Commisson on Financial Aid",
+    title: "PCFA",
     description: "An interactive website on financial aid",
     category: "UI/UX, Illustration",
     imageUrl: "/assets/thumbnails/pcfa.png",

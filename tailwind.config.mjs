@@ -4,13 +4,25 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ["neue-haas-unica"],
+				mono: ['DM Mono']
+				// sans: ['neue-haas-unica']
 			},
 			colors: {
-				'dark-green': '#0D4A22',
+				'dark-green': '#095d40',
 				'hover-color': '#BB6D41',
+				'beige': '#f3f5e9',
+				'light-green': '#516e5b',
+			},
+			typography: {
+				DEFAULT: {
+					css: {
+						color: '#095d40',
+					}
+				}
 			}
 		},
 	},
-	plugins: [],
+	plugins: [
+		require('@tailwindcss/typography'),
+	],
 }

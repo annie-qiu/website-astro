@@ -1,11 +1,157 @@
 ---
-import TitleDisplay from '../components/TitleDisplay.astro';
-import ProjectsOverview from '../components/ProjectsOverview.astro';
 import "../styles/global.scss";
-import SplitLayout from '../layouts/SplitLayout.astro';
+import Layout from '../layouts/Layout.astro';
+import Modal from "../components/Modal";
+import Image from "astro/components/Image.astro";
+import perfume from "../assets/popups/perfume.png"
 ---
+<Layout title={"Annie Qiu"}>
+<div class="">
+  <div class="flex flex-col sm:flex-row justify-between	gap-4">
+    <div class="flex flex-col justify-between">
+    <div class="flex flex-col">
+      <div>
+        <span>Annie Qiu is an 
+          <a class="link" href="https://annieqiu.cargo.site/">artist</a> +   
+          <a class="link internal" href="/work">programmer / designer</a> 
+        </span>
+        <span class="text-2xl">✧</span>
+      </div>
+      <br>
+      
+      <details>
+        <summary class="cursor-pointer">Learn more →</summary>
+        <br>
+        <div class="grid grid-col gap-4">
+          <div class="flex flex-row w-full ">
+            <div class="w-32">From</div>
+            <div class="w-full">
+              <div><a class="link internal" href="/photos/shanghai">Shanghai, China</a></div>
+            </div>
+          </div>
+          <div class="flex flex-row w-full">
+            <div class="w-32">Born</div>
+            <div class="w-full">2002, USA</div>
+          </div>
+          <div class="flex flex-row w-full">
+            <div class="w-32">Education</div>
+            <div class="w-full">B.A. Computer Science, Studio Art from <a class="link internal" href="/photos/2-hanover">Dartmouth College</a></div>
+          </div>
+          <div class="flex flex-row w-full">
+            <div class="w-32">Currently</div>
+            <div class="grid gap-1 w-full">
+              <div>Art residency at <a class="link" href="https://www.acentricspace.com//">ACENTRICSPACE</a> in Zhujiajiao</div>
+            </div>
+          </div>
+          <div class="flex flex-row w-full">
+            <div class="w-32">Upcoming</div>
+            <div class="grid gap-1 w-full">
+              <div>Studio Art Intern at Dartmouth (2024-2025)</div>
+              <div>Forward Deployed Software Engineer at Palantir (starting Summer 2025)</div>
+            </div>
+          </div>
+          <div class="flex flex-row w-full">
+            <div class="w-32">Previously</div>
+            <div class="grid gap-1 w-full">
+              <details>
+                <summary>Designer, Core at <span class="link">DALI Lab</span> <span class="link internal">[see more]</span></a>
+                </summary>
+                <ul class="list-disc pl-2 list-inside">
+                  <li class="pt-1">Digital dashboard for Dartmouth's <a class="link internal" href="/projects/svpp">sexual violence prevention program</a></li>
+                  <li class="pt-1">Interactive website about <a class="link internal" href="/projects/pcfa">financial aid</a></li>
+                  <li class="pt-1">UI/UX for a <a class="link internal" href="/projects/smartscope">smart microscope's companion app</a></li>
+                  <li class="pt-1">Mentored designers and organized educational mini-series + workshops</li>
+                </ul>
+              </details>
+              <div>Software Engineer Intern at <a class="link" href="https://www.databricks.com/">Databricks</a></div>
+              <div>Design Intern at <a class="link" href="https://www.composite.global/">Composite</a></div>
+            </div>
+          </div>
+          <div class="flex flex-row w-full">
+            <div class="w-32">Email</div>
+            <div class="grid gap-1 w-full">
+              <div><a class="link internal" href="mailto:annierqiu@gmail.com">annierqiu@gmail.com</a></div>
+            </div>
+          </div>
+          <details>
+            <summary class="cursor-pointer">Wanna learn even more?</summary>
+            <br>
+          <div class="flex flex-row w-full">
+            <div class="w-44 sm:w-32 mr-6">Things I like</div>
+            <div class="grid gap-1 w-full">
+              <div><a class="link internal" href="/books">Literary fiction</a></div>
+              <div>Musicals</div>
+              <div> 
+                <Modal text="Fragrances" client:load>
+                  <div class="w-[24em] flex flex-row gap-2">
+                    <div class="flex flex-col gap-1">
+                      <div>Currently I'm enjoying Triple Tea from 观夏 / To Summer</div>
+                      <br>
+                      <ul class="text-xs">
+                        <li>top: bergamot, mint, lemongrass</li>
+                        <li>middle: violet, jasmine, tea</li>
+                        <li>base: atlas cedar, papyrus, brown sugar</li>
+                      </ul>
+                    </div>
+                    <Image src={perfume} width="100" height="250" alt="perfume"/>
+                  </div>
+                </Modal>
+              </div>
+              <div><a class="link" href="https://letterboxd.com/film/all-of-us-strangers/">All of Us Strangers (2023)</a></div>
+              <div>Video editing</div>
+            </div>
+          </div>
+          <br>
+          <div class="flex flex-row w-full">
+            <div class="w-44 sm:w-32 mr-6">I am also a</div>
+            <div class="grid gap-1 w-full">
+              <div>Third-culture kid</div>
+              <div>ENFJ</div>
+              <div>Leo</div>
+              <div>Retired radio show host</div>
+              <div>Occasional hiker</div>
+            </div>
+          </div>
+          <br>
+          <div class="flex flex-row w-full">
+            <div class="w-44 sm:w-32  mr-6">More Links</div>
+            <div class="grid gap-1 w-full">
+              <div><a class="link" href="https://www.linkedin.com/in/annierqiu/">LinkedIn</a>, <a class="link" href="https://github.com/annie-qiu">GitHub</a></div>
+            </div>
+          </div>
+          <br>
+          <div class="flex flex-row w-full">
+            <div class="w-44 sm:w-32  mr-6">Currently Reading</div>
+            <div class="grid gap-1 w-full">
+              <div>Funny Weather by Olivia Laing</div>
+            </div>
+          </div>
+        </details>
+      </div>
+      </details>
+    </div>
+      <div class="fixed right-10 bottom-10"><a class="text-dark-green/70 border-b border-dark-green/10" href="about">About this site</a></div>
+    </div>
+    
+    <div>
+    <div class="flex gap-3 flex-col mr-2 border border-dark-green py-3 px-4 pr-6 rounded rounded-xs">
+      <div class="nav ">
+        <a href="/projects"><span class="text-xl">✎</span> Work </a>
+      </div>
+      <div class="nav" >
+        <a href="/play"><span class="text-xl">✿</span> Play </a>
+      </div>
+      <div class="nav">
+        <a href="/books"><span class="text-xl">⚘️</span> Books </a>
+      </div>
+      <div class="nav">
+        <a href="/photos"><span class="text-xl">☀</span> Photos </a>
+      </div>
+      
+    </div> 
+    
+    </div>
+    
+  </div>
 
-<SplitLayout title={"Annie Qiu"}>
-	<TitleDisplay />
-	<ProjectsOverview />
-</SplitLayout>
+</Layout>

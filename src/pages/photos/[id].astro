@@ -1,0 +1,51 @@
+---
+import { getCollection } from "astro:content";
+import { getAlbumImages } from "../../utils/photos";
+import Layout from "../../layouts/Layout.astro";
+import { Image } from "astro:assets";
+
+export async function getStaticPaths() {
+  const albums = await getCollection("albums");
+
+  const paths = Object.values(albums).map((album) => {
+    return {
+      params: {
+        id: album.id,
+      },
+      props: {
+        album,
+      },
+    };
+  });
+
+  return paths;
+}
+
+const { album } = Astro.props;
+const images = await getAlbumImages(album.id);
+const format = album.data.format === "columns" ? "columns-1 max-w-[50em] m-auto" : "columns-1 sm:columns-3";
+const imageAspect = album.data.format === "square" ? "aspect-square bg-cover" : "";
+---
+
+<Layout title={album.data.title}>
+  <div><a class=" internal" href="/">← home</a> / <a class="internal" href="/photos">photos</a></div>
+  <br>
+  <div class="flex">
+    <div class="m-auto text-base text-center">
+      <div>{album.data.title}</div>
+      <div class="italic text-sm">{album.data.description}</div>
+      <br>
+    </div>
+
+  </div>
+  <div class="flex flex-col sm:max-w-[80vw] m-auto">
+    <div class="text-sm m-auto container max-w-[40em] text-center mb-8 text-dark-green/80">{album.data.longDescription}</div>
+
+    <div class=`container ${format} gap-4 sm:gap-6`>
+    {images.map(image => (
+      <Image src={image} alt={album.data.title} class={`rounded-sm mb-6 ${imageAspect}`} loading="lazy"
+      data-album-image loading="lazy"/>
+    ))}
+    </div>
+  </div>
+</Layout>

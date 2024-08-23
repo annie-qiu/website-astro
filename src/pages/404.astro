@@ -1,9 +1,7 @@
 ---
-import TitleDisplay from '../components/TitleDisplay.astro';
-import ProjectsOverview from '../components/ProjectsOverview.astro';
 import "../styles/global.scss";
-import SplitLayout from '../layouts/SplitLayout.astro';
+import Layout from '../layouts/Layout.astro';
 ---
-<SplitLayout title={"404"}>
-	<div class="m-auto">Page not found...</div>
-</SplitLayout>
+<Layout title={"404"}>
+	<div class="text-sm">Page not found... ( •̀_•́ )</div>
+</Layout>

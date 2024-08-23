@@ -1,0 +1,31 @@
+---
+import "../../styles/global.scss";
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from "astro:content";
+const albums = await getCollection("albums");
+
+---
+<Layout title={"Photos"}>
+  <div>
+    <div><a class="" href="/">← home</a></div>
+
+    <br>
+    <div class="text-base mt-2 mb-4 text-center">Photos</div>
+    <br>
+    <div class="flex max-w-[65em] m-auto">
+      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+        {albums.map((album) => (
+          <a href={`/photos/${album.id}`}>
+            <div class="flex m-auto border border-dark-green hover:border-hover-color album-text p-2 w-full aspect-square rounded-sm">
+              <div class="flex m-auto flex-col items-center	text-center pt-4">
+                <div>{album.data.title}</div>
+                <div class="text-xs italic mt-1">{album.data.description}</div>
+                <div class="text-xs mt-4">({album.data.num})</div>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</Layout>
