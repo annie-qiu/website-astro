@@ -3,7 +3,7 @@ import { defineCollection, z } from 'astro:content';
 // 2. Define your collection(s)
 const album = defineCollection({ 
   type: "data",
-  schema: ({ image }) =>
+  schema: () =>
     z.object({
       title: z.string(),
       description: z.string(),
