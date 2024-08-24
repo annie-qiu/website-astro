@@ -1,13 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
+import { getPlayImages } from "../utils/photos";
 
-const images = await import.meta.glob<{ default: ImageMetadata }>(
-    "../assets/play/**/*.{jpeg,jpg,png,JPG,PNG,gif}"
-  );
-const resolvedImages = await Promise.all(
-    Object.values(images).map((image) => image().then((file) => file.default))
-  );
+const images = await getPlayImages();
 ---
 
 <Layout title="Play">
@@ -19,9 +15,9 @@ const resolvedImages = await Promise.all(
   </div>
   <br>
   <div class="container sm:columns-2 max-w-[60em] m-auto gap-4 sm:gap-10">
-    {resolvedImages.map((image) => (
+    {images.map((image) => (
     <div class="mb-4 sm:mb-10 container">
-      <Image src={image} inferSize alt="hi" class="rounded-sm"/>
+      <Image src={image} alt="hi" class="rounded-sm"/>
     </div>
     ))}
   </div>
