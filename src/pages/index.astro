@@ -8,7 +8,7 @@ import perfume from "../assets/popups/perfume.png"
 <Layout title={"Annie Qiu"}>
 <div class="">
   <div class="flex flex-col sm:flex-row justify-between	gap-4">
-    <div class="flex flex-col justify-between">
+    <div class="flex sm:min-h-[49em] flex-col justify-between">
     <div class="flex flex-col">
       <div>
         <span>Annie Qiu is an 
@@ -18,8 +18,25 @@ import perfume from "../assets/popups/perfume.png"
         <span class="text-2xl">✧</span>
       </div>
       <br>
+
+      <div class="block sm:hidden flex mb-6">
+        <div class="flex gap-3 flex-col mr-2 border border-dark-green py-3 px-4 pr-6 rounded rounded-xs">
+          <div class="nav ">
+            <a href="/projects"><span class="text-xl">✎</span> Work </a>
+          </div>
+          <div class="nav" >
+            <a href="/play"><span class="text-xl">✿</span> Play </a>
+          </div>
+          <div class="nav">
+            <a href="/books"><span class="text-xl">⚘️</span> Books </a>
+          </div>
+          <div class="nav">
+            <a href="/photos"><span class="text-xl">☀</span> Photos </a>
+          </div>
+        </div> 
+      </div>
       
-      <details>
+      <details class="sm:mb-10">
         <summary class="cursor-pointer">Learn more →</summary>
         <br>
         <div class="grid grid-col gap-4">
@@ -131,27 +148,31 @@ import perfume from "../assets/popups/perfume.png"
       </div>
       </details>
     </div>
-      <div class="sm:fixed right-10 bottom-10"><a class="text-dark-green/70 border-b border-dark-green/10" href="about">About this site</a></div>
+      <div class="hidden sm:inline"><a class="text-dark-green/70 border-b border-dark-green/10" href="about">About this site</a></div>
     </div>
     
     <div>
-    <div class="flex gap-3 flex-col mr-2 border border-dark-green py-3 px-4 pr-6 rounded rounded-xs">
-      <div class="nav ">
-        <a href="/projects"><span class="text-xl">✎</span> Work </a>
-      </div>
-      <div class="nav" >
-        <a href="/play"><span class="text-xl">✿</span> Play </a>
-      </div>
-      <div class="nav">
-        <a href="/books"><span class="text-xl">⚘️</span> Books </a>
-      </div>
-      <div class="nav">
-        <a href="/photos"><span class="text-xl">☀</span> Photos </a>
-      </div>
-      
-    </div> 
+    
+    <div class="hidden sm:block flex">
+      <div class="flex gap-3 flex-col mr-2 border border-dark-green py-3 px-4 pr-6 rounded rounded-xs">
+        <div class="nav ">
+          <a href="/projects"><span class="text-xl">✎</span> Work </a>
+        </div>
+        <div class="nav" >
+          <a href="/play"><span class="text-xl">✿</span> Play </a>
+        </div>
+        <div class="nav">
+          <a href="/books"><span class="text-xl">⚘️</span> Books </a>
+        </div>
+        <div class="nav">
+          <a href="/photos"><span class="text-xl">☀</span> Photos </a>
+        </div>
+      </div> 
+    </div>
     
     </div>
+    <div class="block sm:hidden"><a class="text-dark-green/70 border-b border-dark-green/10" href="about">About this site</a></div>
+
     
   </div>
 
