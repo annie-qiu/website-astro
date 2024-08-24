@@ -21,13 +21,13 @@ I designed the app's UI, integrated Google authentication, and used the Google C
 ### Final Product
 
 **Onboarding:** Pick a buddy
-<img src="/assets/wellbuddies/onboard.gif">
+![onboard](../../assets/projects/wellbuddies/onboard.gif)
 
 **Sign In:** Sign in with Google and check in with your mood
-<img src="/assets/wellbuddies/welcome.gif">
+![welcome](../../assets/projects/wellbuddies/welcome.gif)
 
 **New Activity:** Wellbuddies automatically creates a new wellness event for you in your calendar. When you complete it, your buddy is taken care of with a treat
-<img src="/assets/wellbuddies/activity.gif">
+![activity](../../assets/projects/wellbuddies/activity.gif)
 
 **Calendar:** Your in-app calendar is synced with your Google Calendar
-<img src="/assets/wellbuddies/calendar.png">
+![calendar](../../assets/projects/wellbuddies/calendar.png)

@@ -15,12 +15,9 @@ I made sketches and storyboards for the website based on user research from pevi
 
 <a class="link" href="https://shapethefuture.dartmouth.edu/">Try it out ↗</a>
 
-<div class="flex flex-col space-y-6">
-  <img src="/assets/pcfa/pcfa1.png">
-  <img src="/assets/pcfa/pcfa2.png">
-  <img src="/assets/pcfa/pcfa3.png">
-  <img src="/assets/pcfa/pcfa4.png">
-  <img src="/assets/pcfa/pcfa5.png">
-  <img src="/assets/pcfa/pcfa6.png">
-
-</div>
+![pcfa1](../../assets/projects/pcfa/pcfa1.png)
+![pcfa2](../../assets/projects/pcfa/pcfa2.png)
+![pcfa3](../../assets/projects/pcfa/pcfa3.png)
+![pcfa4](../../assets/projects/pcfa/pcfa4.png)
+![pcfa5](../../assets/projects/pcfa/pcfa5.png)
+![pcfa6](../../assets/projects/pcfa/pcfa6.png)

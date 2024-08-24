@@ -17,7 +17,5 @@ Features
 
 <a class="link" href="https://annie-qiu-notes.onrender.com/">Try it out ↗</a>
 
-<div class="flex flex-col flex-nowrap space-y-5">
-  <img src="/assets/notes/ss1.png">
-  <img src="/assets/notes/ss2.png">
-</div>
+![notes1](../../assets/projects/notes/ss1.png)
+![notes2](../../assets/projects/notes/ss2.png)

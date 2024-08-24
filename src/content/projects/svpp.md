@@ -18,30 +18,29 @@ Our design process was driven by the question: How might we create a seamless in
 
 We interviewed students and SVPP administrators to understand the current experience of managing your SVPP curriculum.
 
-<img src="/assets/svpp/interview.png">
-<img src="/assets/svpp/empathy.png">
-<img src="/assets/svpp/persona.png">
+![interview](../../assets/projects/svpp/interview.png)
+![empathy](../../assets/projects/svpp/empathy.png)
+![persona](../../assets/projects/svpp/persona.png)
 
 ### Sketches and Grayscales
 
 We designed pages for both the student-facing and admin-facing sides of the platform. We brainstormed ways to motivate students to feel engaged with the curriculum.
-
-<img src="/assets/svpp/sketch.png">
-<img src="/assets/svpp/gray.png">
+![sketch](../../assets/projects/svpp/persona.png)
+![gray](../../assets/projects/svpp/gray.png)
 
 ### Hifis
 **Home:** Shows the courses the user is enrolled in, their overall course progress, and upcoming sessions they can sign up for.
-<img src="/assets/svpp/welcome.png">
+![welcome](../../assets/projects/svpp/welcome.png)
 
 **Calendar:** Students can see the schedule of course sessions and sign up for events.
-<img src="/assets/svpp/calendar.png"
+![calendar](../../assets/projects/svpp/calendar.png)
 
 **Curriculum:** See in-depth progress for a curriculum, including specific courses required
-<img src="/assets/svpp/curriculum.png">
+![curriculum](../../assets/projects/svpp/curriculum.png)
 
 **Progress:** A visualization of the student's progress represented with the growth of a plant
-<img src="/assets/svpp/progress.png">
+![progress](../../assets/projects/svpp/progress.png)
 
 ### Style Guide
 We used the existing Student Wellness Center and Dartmouth style guide to remain consistent with institution branding.
-<img src="/assets/svpp/style.png">
+![style](../../assets/projects/svpp/style.png)

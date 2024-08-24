@@ -13,7 +13,6 @@ The lab is a student-driven technology agencythat designs and builds early-stage
 
 ![about](../../assets/projects/dali-website/about-dali.png)
 
-
 ### Current Website
 DALI's <a class="link" href="https://dali.dartmouth.edu/">current website</a> is effective in introducing the lab and communicating the lab's student-driven, creative energy. However, it could be improved by **updating the visual style and highlighting less visible aspects of DALI** such as community events and mentorship.
 
