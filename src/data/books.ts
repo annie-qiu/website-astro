@@ -8,6 +8,12 @@ interface Book {
 
 export const bookList: Book[] = [
   {
+    title: "Martyr!",
+    author: "Kaveh Akbar",
+    img: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1683818219i/139400713.jpg",
+    year: 2024,
+  },
+  {
     title: "Trick Mirror",
     author: "Jia Tolentino",
     img: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1544069605i/43126457.jpg",
