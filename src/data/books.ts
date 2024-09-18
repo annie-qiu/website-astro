@@ -8,6 +8,24 @@ interface Book {
 
 export const bookList: Book[] = [
   {
+    title: "White Nights",
+    author: "Fyodor Dostoevsky",
+    img: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1450699039i/1772910.jpg",
+    year: 2024,
+  },
+  {
+    title: "Good Material",
+    author: "Dolly Alderton",
+    img: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1694494047i/96177629.jpg",
+    year: 2024,
+  },
+  {
+    title: "Funny Weather",
+    author: "Olivia Laing",
+    img: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1571122735i/50755102.jpg",
+    year: 2024,
+  },
+  {
     title: "Martyr!",
     author: "Kaveh Akbar",
     img: "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1683818219i/139400713.jpg",
