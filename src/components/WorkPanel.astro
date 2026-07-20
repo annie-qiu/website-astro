@@ -1,0 +1,101 @@
+---
+import { Image } from "astro:assets";
+import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+
+interface GridItem {
+  href?: string;
+  title: string;
+  label: string;
+  image?: ImageMetadata;
+}
+
+interface Project {
+  title: string;
+  description: string;
+  images?: ImageMetadata[];
+  detail: AstroComponentFactory;
+  video?: string;
+}
+
+interface Props {
+  id: string;
+  title: string;
+  layout?: "grid" | "design" | "list";
+  items?: GridItem[];
+  projects?: Project[];
+}
+
+const { id, title: _title, layout = "grid", items, projects } = Astro.props as Props;
+---
+
+<div id={id} class="work-panel max-w-4xl mt-8" data-work-panel hidden>
+
+  {layout === "grid" && items?.length && (
+    <div class="grid gap-3">
+      {items.map((item) => (
+        <a href={item.href} class="block group">
+          {item.image && (
+            <Image
+              src={item.image}
+              alt={item.label}
+              class="w-full h-auto object-cover transition-opacity group-hover:opacity-70"
+            />
+          )}
+          <p class="text-xs mt-1 text-gray-500">{item.label}</p>
+        </a>
+      ))}
+    </div>
+  )}
+
+  {layout === "list" && items?.length && (
+    <ul>
+      {items.map((item) => (
+        <li class="py-2 text-xs sans-serif">
+          {item.image && <Image class="mb-2" src={item.image} alt={item.label} />}
+          <p>
+            <span class="serif text-sm text-gray-600">{item.title}, </span><span class="sans-serif text-xs text-gray-400">{item.label}</span>
+          </p>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  {layout === "design" && projects?.length && (
+    <div class="space-y-12">
+      {projects.map((project) => {
+        const Detail = project.detail;
+        return (
+          <div class="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-6">
+            <div>
+              <p class="text-md mb-2">{project.title}</p>
+              <p class="text-xs sans-serif text-gray-400 font-weight-300">{project.description}</p>
+              <div class="text-xs text-gray-900 project-detail">
+                <Detail />
+              </div>
+            </div>
+            <div>
+              {project.video && (
+              <div class="aspect-video mb-3">
+                <iframe
+                  src={`https://player.vimeo.com/video/${project.video}`}
+                  class="w-full h-full"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  loading="lazy"
+                ></iframe>
+              </div>
+            )}
+              <div class="flex-row gap-2 s">
+                {project.images?.length &&  project.images.map((img) => (
+                  <Image src={img} alt={project.title} class="w-full h-auto object-cover mb-6" />
+                ))}
+              </div>
+
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  )}
+
+  {!items?.length && !projects?.length && <slot />}
+</div>

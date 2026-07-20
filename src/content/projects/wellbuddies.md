@@ -1,9 +1,10 @@
 ---
-title: 'Wellbuddies'
+title: 'wellbuddies'
 slug: wellbuddies
 description: "App"
 year: '2022'
 tools: ['react native', 'ui/ux', 'team of 6']
+archive: true
 ---
 
 ### Background

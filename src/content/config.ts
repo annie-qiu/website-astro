@@ -15,13 +15,26 @@ const album = defineCollection({
 
 const project = defineCollection({ 
   type: "content",
-  schema: () =>
+  schema: ({ image }) =>
     z.object({
       title: z.string(),
       description: z.string(),
       year: z.string(),
       tools: z.array(z.string()),
+      images: z.array(image()).optional(),
       archive: z.boolean().optional(),
+      video: z.string().optional(),
+    }),
+});
+
+const painting = defineCollection({ 
+  type: "content",
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      year: z.string(),
+      image: image(),
+      text: z.string().optional(),
     }),
 });
 
@@ -30,4 +43,5 @@ const project = defineCollection({
 export const collections = {
   'albums': album,
   "projects": project,
+  "paintings": painting,
 };

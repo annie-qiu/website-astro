@@ -1,0 +1,21 @@
+---
+const { options } = Astro.props;
+---
+<span
+  class="cycle cursor-pointer transition-colors hover:text-gray-400"
+  data-options={options.join('|')}
+>{options[0]}</span><!--
+--><script>
+  document.querySelectorAll<HTMLElement>('.cycle').forEach((el) => {
+    if (el.dataset.bound) return;
+    el.dataset.bound = 'true';
+
+    const options = el.dataset.options!.split('|');
+    let index = 0;
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      index = (index + 1) % options.length;
+      el.textContent = options[index];
+    });
+  });
+</script>

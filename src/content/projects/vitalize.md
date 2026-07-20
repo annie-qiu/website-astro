@@ -1,5 +1,5 @@
 ---
-title: 'Vitalize (YC Startup)'
+title: 'designing for vitalize, a healthcare startup'
 slug: vitalize
 description: App Design
 year: '2021'

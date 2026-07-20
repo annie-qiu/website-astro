@@ -1,13 +1,13 @@
 ---
-title: Digital Room
-description: 3D Modeling
+title: The Farewell
+description: Class Project — 2021
 slug: room
 year: '2021'
 tools: ['maya']
----
-<div class="text-sm">Digital models of the living room from the film <a href="https://a24films.com/films/the-farewell" class="link">The Farewell</a> that I modeled, textured, and rendered.</div>
+images: 
+- "../../assets/projects/room/room1.jpg"
+- "../../assets/projects/room/room2.jpg"
 
-![room1](../../assets/projects/room/room1.jpg)
-![room2](../../assets/projects/room/room2.jpg)
-![room3](../../assets/projects/room/room3.jpg)
-![room4](../../assets/projects/room/room4.jpg)
+
+---
+A digital model of the living room from The Farewell, modeled in Maya.

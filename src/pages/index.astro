@@ -1,179 +1,148 @@
 ---
 import "../styles/global.scss";
-import Layout from '../layouts/Layout.astro';
-import Modal from "../components/Modal";
-import { Image } from 'astro:assets';
-import perfume from "../assets/popups/perfume.png"
+import Layout from "../layouts/Layout.astro";
+import CycleText from "../components/CycleText.astro";
+import CategoryReveal from "../components/CategoryReveal.astro";
+import WorkPanel from "../components/WorkPanel.astro";
+import { getCollection } from "astro:content";
+import paintingCover from "../assets/paintings/lizard.jpg";
+import { Image } from "astro:assets";
+
+
+const paintings = await getCollection("paintings");
+const projectEntries = await getCollection(
+  "projects",
+  ({ data }) => !data.archive,
+);
+
+const softwareOptions = [
+  "decode complex processes",
+  "design maintainable tools",
+  "solve ambiguous problems",
+];
+const designOptions = [
+  "translate ideas",
+  "tell stories through visual language",
+  "make beautiful experiences",
+];
+const paintingOptions = [
+  "play with color, shape, form",
+  "process my experiences of the world",
+  "connect with friends and strangers",
+  "live a more open-ended life",
+];
+
+const projects = await Promise.all(
+  projectEntries.map(async (entry) => {
+    const { Content } = await entry.render(); // use entry.render() instead if on Astro 4.x
+    return {
+      title: entry.data.title,
+      description: entry.data.description,
+      images: entry.data.images,
+      detail: Content,
+      video: entry.data.video,
+    };
+  }),
+);
 ---
+
 <Layout title={"Annie Qiu"}>
-<div class="">
-  <div class="flex flex-col sm:flex-row justify-between	gap-4">
-    <div class="flex sm:min-h-[49em] flex-col justify-between">
-    <div class="flex flex-col">
-      <div>
-        <span>Annie Qiu is an 
-          <a class="link" href="https://annieqiu.cargo.site/">artist</a> +   
-          <a class="link internal" href="/projects">programmer / designer</a> 
-        </span>
-        <span class="text-2xl">✧</span>
+  <div class="flex flex-col justify-between gap-4">
+    <p class="text-sm leading-[1.75] text-left category  cursor-pointer hover:text-neutral-500 transition-color" data-target="about">Annie Qiu</p>
+    <p class="text-sm leading-[1.75] text-left">
+      I <CategoryReveal target="software" label="build software systems" /> to <CycleText
+        options={softwareOptions}
+      />,<br />
+      <CategoryReveal
+        target="design"
+        label="design interfaces and illustrations"
+      /> to <CycleText options={designOptions} />,<br />
+      and <CategoryReveal target="paintings" label="make paintings" /> to <CycleText
+        options={paintingOptions}
+      />.
+    </p>
+    <WorkPanel
+      id="paintings"
+      title="paintings"
+      layout="list"
+      items={paintings.map((p) => ({
+        image: p.data.image,
+        title: p.data.title,
+        label: `${p.data.year}, ${p.data.text}`,
+        href: `/paintings/${p.id}`,
+      }))}
+    />
+    <WorkPanel id="software" title="software">
+      <p class="text-sm leading-6">
+        I currently work as a Forward Deployed Engineer on the commercial side
+        at Palantir, where I build systems for enterprise workflows, including a
+        probabilistic forecasting tool for a software and hardware manufacturer
+        and an LLM-based RFP automation tool for a Fortune 500 company. Before
+        that, I interned at Databricks and worked on supporting a cost-optimized
+        mode for Serverless Compute using spot instances.
+      </p>
+            <div class="flex gap-4 text-xs sans-serif text-gray-500">
+        <a href="/assets/resume.pdf" target="_blank" class="hover:text-gray-800"
+          >Resume</a
+        >
+        <a href="mailto:annierqiu@gmail.com" class="hover:text-gray-800">Email</a>
+        <a
+          href="https://www.linkedin.com/in/annierqiu/"
+          target="_blank"
+          class="hover:text-gray-800">LinkedIn</a
+        >
       </div>
-      <br>
-
-      <div class="block sm:hidden flex mb-6">
-        <div class="flex gap-3 flex-col mr-2 border border-dark-green py-3 px-4 pr-6 rounded rounded-xs">
-          <div class="nav ">
-            <a href="/projects"><span class="text-xl">✎</span> Work </a>
-          </div>
-          <div class="nav" >
-            <a href="/play"><span class="text-xl">✿</span> Play </a>
-          </div>
-          <div class="nav">
-            <a href="/books"><span class="text-xl">⚘️</span> Books </a>
-          </div>
-          <div class="nav">
-            <a href="/photos"><span class="text-xl">☀</span> Photos </a>
-          </div>
-        </div> 
+    </WorkPanel>
+    <WorkPanel
+      id="design"
+      title="design"
+      layout="design"
+      projects={projects}
+      ;
+    />
+    <div id="about" class="work-panel max-w-2xl mt-8" data-work-panel hidden>
+      <p class="text-sm">I grew up in Shanghai, studied computer science and studio art at Dartmouth, and live in New York City. </p>
+      <Image
+        src={paintingCover}
+        alt="Lizard Apartment"
+        class="w-full h-auto object-cover mb-4"
+      />
+      <div class="flex gap-4 text-xs sans-serif text-gray-500">
+        <a href="/assets/resume.pdf" target="_blank" class="hover:text-gray-800"
+          >Resume</a
+        >
+        <a href="mailto:annierqiu@gmail.com" class="hover:text-gray-800">Email</a>
+        <a
+          href="https://www.linkedin.com/in/annierqiu/"
+          target="_blank"
+          class="hover:text-gray-800">LinkedIn</a
+        >
       </div>
-      
-      <details class="sm:mb-10">
-        <summary class="cursor-pointer">Learn more →</summary>
-        <br>
-        <div class="grid grid-col gap-4">
-          <div class="flex flex-row w-full ">
-            <div class="w-32">From</div>
-            <div class="w-full">
-              <div><a class="link internal" href="/photos/shanghai">Shanghai, China</a></div>
-            </div>
-          </div>
-          <div class="flex flex-row w-full">
-            <div class="w-32">Born</div>
-            <div class="w-full">2002, USA</div>
-          </div>
-          <div class="flex flex-row w-full">
-            <div class="w-32">Email</div>
-            <div class="grid gap-1 w-full">
-              <div><a class="link internal" href="mailto:annierqiu@gmail.com">annierqiu@gmail.com</a></div>
-            </div>
-          </div>
-          <div class="flex flex-row w-full">
-            <div class="w-32">Education</div>
-            <div class="w-full">B.A. Computer Science, Studio Art from <a class="link internal" href="/photos/2-hanover">Dartmouth College</a></div>
-          </div>
-          <div class="flex flex-row w-full">
-            <div class="w-32">Currently</div>
-            <div class="grid gap-1 w-full">
-              <div>Studio Art Intern at Dartmouth</div>
-            </div>
-          </div>
-          <div class="flex flex-row w-full">
-            <div class="w-32">Upcoming</div>
-            <div class="grid gap-1 w-full">
-              <div>Forward Deployed Software Engineer at Palantir (starting Summer 2025)</div>
-            </div>
-          </div>
-          <div class="flex flex-row w-full">
-            <div class="w-32">Previously</div>
-            <div class="grid gap-1 w-full">
-              <div>Art residency at <a class="link" href="https://www.acentricspace.com//">ACENTRICSPACE</a> in Zhujiajiao</div>
-              <details>
-                <summary>Designer, Core at <span class="link">DALI Lab</span> <span class="link internal">[see more]</span></a>
-                </summary>
-                <ul class="list-disc pl-2 list-inside">
-                  <li class="pt-1">Digital dashboard for Dartmouth's <a class="link internal" href="/projects/svpp">sexual violence prevention program</a></li>
-                  <li class="pt-1">Interactive website about <a class="link internal" href="/projects/pcfa">financial aid</a></li>
-                  <li class="pt-1">UI/UX for a <a class="link internal" href="/projects/smartscope">smart microscope's companion app</a></li>
-                  <li class="pt-1">Mentored designers and organized educational mini-series + workshops</li>
-                </ul>
-              </details>
-              <div>Software Engineer Intern at <a class="link" href="https://www.databricks.com/">Databricks</a></div>
-              <div>Design Intern at <a class="link" href="https://www.composite.global/">Composite</a></div>
-            </div>
-          </div>
-          
-          <details>
-            <summary class="cursor-pointer">Wanna learn even more?</summary>
-            <br>
-          <div class="flex flex-row w-full">
-            <div class="w-44 sm:w-32 md:w-40 mr-6">Things I like</div>
-            <div class="grid gap-1 w-full">
-              <div><a class="link internal" href="/books">Literary fiction</a></div>
-              <div>Musicals</div>
-              <div> 
-                <Modal text="Fragrances" client:load>
-                  <div class="w-[24em] flex flex-row gap-2">
-                    <div class="flex flex-col gap-1">
-                      <div>Currently I'm enjoying Triple Tea from 观夏 / To Summer</div>
-                      <br>
-                      <ul class="text-xs">
-                        <li>top: bergamot, mint, lemongrass</li>
-                        <li>middle: violet, jasmine, tea</li>
-                        <li>base: atlas cedar, papyrus, brown sugar</li>
-                      </ul>
-                    </div>
-                    <Image src={perfume} width="100" height="250" alt="perfume"/>
-                  </div>
-                </Modal>
-              </div>
-              <div>All of Us Strangers (2023)</div>
-              <div>Video editing</div>
-            </div>
-          </div>
-          <br>
-          <div class="flex flex-row w-full">
-            <div class="w-44 sm:w-32 md:w-40 mr-6">I am also a</div>
-            <div class="grid gap-1 w-full">
-              <div>Third-culture kid</div>
-              <div>ENFJ</div>
-              <div>Leo</div>
-              <div>Retired radio show host</div>
-              <div>Occasional hiker</div>
-            </div>
-          </div>
-          <br>
-          <div class="flex flex-row w-full">
-            <div class="w-44 sm:w-32 md:w-40 mr-6">More Links</div>
-            <div class="grid gap-1 w-full">
-              <div><a class="link" href="https://www.linkedin.com/in/annierqiu/">LinkedIn</a>, <a class="link" href="https://github.com/annie-qiu">GitHub</a></div>
-            </div>
-          </div>
-          <br>
-          <div class="flex flex-row w-full">
-            <div class="w-44 sm:w-32 md:w-40 mr-6">Currently Reading</div>
-            <div class="grid gap-1 w-full">
-              <div>Autumn by Ali Smith</div>
-            </div>
-          </div>
-        </details>
-      </div>
-      </details>
     </div>
-      <div class="hidden sm:inline"><a class="text-dark-green/70 border-b border-dark-green/10" href="about">About this site</a></div>
-    </div>
-    
-    <div>
-    
-    <div class="hidden sm:block flex">
-      <div class="flex gap-3 flex-col mr-2 border border-dark-green py-3 px-4 pr-6 rounded rounded-xs">
-        <div class="nav ">
-          <a href="/projects"><span class="text-xl">✎</span> Work </a>
-        </div>
-        <div class="nav" >
-          <a href="/play"><span class="text-xl">✿</span> Play </a>
-        </div>
-        <div class="nav">
-          <a href="/books"><span class="text-xl">⚘️</span> Books </a>
-        </div>
-        <div class="nav">
-          <a href="/photos"><span class="text-xl">☀</span> Photos </a>
-        </div>
-      </div> 
-    </div>
-    
-    </div>
-    <div class="block sm:hidden"><a class="text-dark-green/70 border-b border-dark-green/10" href="about">About this site</a></div>
-
-    
   </div>
-
 </Layout>
+
+<script>
+  const categories = document.querySelectorAll<HTMLElement>(".category");
+  const panels = document.querySelectorAll<HTMLElement>("[data-work-panel]");
+
+  function showPanel(id: string) {
+    panels.forEach((panel) => {
+      panel.hidden = panel.id !== id;
+    });
+
+    categories.forEach((category) => {
+      const selected = category.dataset.target === id;
+      category.classList.toggle("decoration-solid", selected);
+      category.classList.toggle("decoration-dotted", !selected);
+    });
+  }
+
+  categories.forEach((category) => {
+    category.addEventListener("click", () => {
+      showPanel(category.dataset.target!);
+    });
+  });
+
+  showPanel("about");
+</script>
