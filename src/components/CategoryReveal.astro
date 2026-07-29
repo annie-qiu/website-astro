@@ -2,9 +2,10 @@
 const { target, label } = Astro.props;
 ---
 
-<span
+<a
+  href={`/#${target}`}
   class="category cursor-pointer link   hover:text-neutral-500 transition-colors"
   data-target={target}
 >
   {label}
-</span>
+</a>

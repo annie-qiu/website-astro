@@ -1,0 +1,48 @@
+---
+import CycleText from "./CycleText.astro";
+import CategoryReveal from "./CategoryReveal.astro";
+
+const softwareOptions = [
+  "decode complex processes",
+  "design maintainable tools",
+  "solve ambiguous problems",
+];
+const designOptions = [
+  "translate ideas",
+  "tell stories through visual language",
+  "make beautiful experiences",
+];
+const paintingOptions = [
+  "play with color, shape, form",
+  "process my experiences of the world",
+  "connect with friends and strangers",
+  "live a more open-ended life",
+];
+---
+
+<div id="left-panel" class="flex flex-col gap-4 w-full lg:w-1/3 lg:max-w-[33%] lg:min-h-[calc(100vh-3rem)] lg:sticky lg:top-6">
+  <a href="/#about" class="text-sm leading-[1.75] text-left category  cursor-pointer hover:text-neutral-500 transition-color" data-target="about">Annie Qiu</a>
+  <p class="text-sm leading-[1.75] text-left">
+    I <CategoryReveal target="software" label="build software systems" /> to <CycleText
+      options={softwareOptions}
+    />,<br />
+    <CategoryReveal
+      target="design"
+      label="design interfaces and illustrations"
+    /> to <CycleText options={designOptions} />,<br />
+    and <CategoryReveal target="paintings" label="make paintings" /> to <CycleText
+      options={paintingOptions}
+    />.
+  </p>
+  <div class="flex gap-4 text-xs sans-serif text-gray-500">
+    <a href="/assets/resume.pdf" target="_blank" class="hover:text-gray-800"
+      >Resume</a
+    >
+    <a href="mailto:annierqiu@gmail.com" class="hover:text-gray-800">Email</a>
+    <a
+      href="https://www.linkedin.com/in/annierqiu/"
+      target="_blank"
+      class="hover:text-gray-800">LinkedIn</a
+    >
+  </div>
+</div>

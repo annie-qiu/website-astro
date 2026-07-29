@@ -1,8 +1,7 @@
 ---
 import "../styles/global.scss";
 import Layout from "../layouts/Layout.astro";
-import CycleText from "../components/CycleText.astro";
-import CategoryReveal from "../components/CategoryReveal.astro";
+import LeftPanel from "../components/LeftPanel.astro";
 import WorkPanel from "../components/WorkPanel.astro";
 import { getCollection } from "astro:content";
 import paintingCover from "../assets/paintings/lizard.jpg";
@@ -15,23 +14,6 @@ const projectEntries = await getCollection(
   ({ data }) => !data.archive,
 );
 
-const softwareOptions = [
-  "decode complex processes",
-  "design maintainable tools",
-  "solve ambiguous problems",
-];
-const designOptions = [
-  "translate ideas",
-  "tell stories through visual language",
-  "make beautiful experiences",
-];
-const paintingOptions = [
-  "play with color, shape, form",
-  "process my experiences of the world",
-  "connect with friends and strangers",
-  "live a more open-ended life",
-];
-
 const projects = await Promise.all(
   projectEntries.map(async (entry) => {
     const { Content } = await entry.render(); // use entry.render() instead if on Astro 4.x
@@ -41,82 +23,56 @@ const projects = await Promise.all(
       images: entry.data.images,
       detail: Content,
       video: entry.data.video,
+      slug: entry.slug,
+      link: entry.data.link,
     };
   }),
 );
 ---
 
 <Layout title={"Annie Qiu"}>
-  <div class="flex flex-col justify-between gap-4">
-    <p class="text-sm leading-[1.75] text-left category  cursor-pointer hover:text-neutral-500 transition-color" data-target="about">Annie Qiu</p>
-    <p class="text-sm leading-[1.75] text-left">
-      I <CategoryReveal target="software" label="build software systems" /> to <CycleText
-        options={softwareOptions}
-      />,<br />
-      <CategoryReveal
-        target="design"
-        label="design interfaces and illustrations"
-      /> to <CycleText options={designOptions} />,<br />
-      and <CategoryReveal target="paintings" label="make paintings" /> to <CycleText
-        options={paintingOptions}
-      />.
-    </p>
-    <WorkPanel
-      id="paintings"
-      title="paintings"
-      layout="list"
-      items={paintings.map((p) => ({
-        image: p.data.image,
-        title: p.data.title,
-        label: `${p.data.year}, ${p.data.text}`,
-        href: `/paintings/${p.id}`,
-      }))}
-    />
-    <WorkPanel id="software" title="software">
-      <p class="text-sm leading-6">
-        I currently work as a Forward Deployed Engineer on the commercial side
-        at Palantir, where I build systems for enterprise workflows, including a
-        probabilistic forecasting tool for a software and hardware manufacturer
-        and an LLM-based RFP automation tool for a Fortune 500 company. Before
-        that, I interned at Databricks and worked on supporting a cost-optimized
-        mode for Serverless Compute using spot instances.
-      </p>
-            <div class="flex gap-4 text-xs sans-serif text-gray-500">
-        <a href="/assets/resume.pdf" target="_blank" class="hover:text-gray-800"
-          >Resume</a
-        >
-        <a href="mailto:annierqiu@gmail.com" class="hover:text-gray-800">Email</a>
-        <a
-          href="https://www.linkedin.com/in/annierqiu/"
-          target="_blank"
-          class="hover:text-gray-800">LinkedIn</a
-        >
-      </div>
-    </WorkPanel>
-    <WorkPanel
-      id="design"
-      title="design"
-      layout="design"
-      projects={projects}
-      ;
-    />
-    <div id="about" class="work-panel max-w-2xl mt-8" data-work-panel hidden>
-      <p class="text-sm">I grew up in Shanghai, studied computer science and studio art at Dartmouth, and live in New York City. </p>
-      <Image
-        src={paintingCover}
-        alt="Lizard Apartment"
-        class="w-full h-auto object-cover mb-4"
+  <div class="flex flex-col lg:flex-row gap-16 lg:gap-8 lg:items-start">
+    <LeftPanel />
+    <div class="w-full lg:flex-1 lg:flex lg:flex-col lg:min-h-[calc(100vh-3rem)]">
+      <WorkPanel
+        id="paintings"
+        title="paintings"
+        layout="masonry"
+        lightbox
+        items={paintings.map((p) => ({
+          id: p.id,
+          image: p.data.image,
+          title: p.data.title,
+          label: `${p.data.year}, ${p.data.text}`,
+          href: `/paintings/${p.id}`,
+        }))}
       />
-      <div class="flex gap-4 text-xs sans-serif text-gray-500">
-        <a href="/assets/resume.pdf" target="_blank" class="hover:text-gray-800"
-          >Resume</a
-        >
-        <a href="mailto:annierqiu@gmail.com" class="hover:text-gray-800">Email</a>
-        <a
-          href="https://www.linkedin.com/in/annierqiu/"
-          target="_blank"
-          class="hover:text-gray-800">LinkedIn</a
-        >
+      <WorkPanel id="software" title="software">
+        <p class="text-sm leading-normal max-w-2xl indent-8">
+          I currently work as a Forward Deployed Engineer on the commercial side
+          at Palantir, where I build systems for enterprise workflows, including a
+          probabilistic forecasting tool for a software and hardware manufacturer
+          and an LLM-based RFP automation tool for a Fortune 500 company. Before
+          that, I interned at Databricks and worked on supporting a cost-optimized
+          mode for Serverless Compute using spot instances.
+        </p>
+      </WorkPanel>
+      <WorkPanel
+        id="design"
+        title="design"
+        layout="design"
+        projects={projects}
+        ;
+      />
+      <div id="about" class="work-panel w-full lg:max-h-[calc(100vh-3rem)] lg:overflow-hidden" data-work-panel hidden>
+        <div class="flex flex-col gap-2 lg:h-full">
+          <p class="text-sm">I grew up in Shanghai, studied computer science and studio art at Dartmouth, and live in New York City. </p>
+          <Image
+            src={paintingCover}
+            alt="Lizard Apartment"
+            class="w-full h-auto object-cover lg:flex-1 lg:min-h-0 lg:w-auto lg:h-full lg:object-contain"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -138,11 +94,28 @@ const projects = await Promise.all(
     });
   }
 
+  function goToHash(hash: string) {
+    const [id, slug] = hash.split("/");
+    showPanel(id || "about");
+    if (slug) {
+      requestAnimationFrame(() => {
+        document.getElementById(slug)?.scrollIntoView();
+      });
+    }
+  }
+
   categories.forEach((category) => {
-    category.addEventListener("click", () => {
-      showPanel(category.dataset.target!);
+    category.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = category.dataset.target!;
+      showPanel(target);
+      history.pushState(null, "", `#${target}`);
     });
   });
 
-  showPanel("about");
+  window.addEventListener("popstate", () => {
+    goToHash(window.location.hash.slice(1) || "about");
+  });
+
+  goToHash(window.location.hash.slice(1) || "about");
 </script>

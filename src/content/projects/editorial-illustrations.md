@@ -7,5 +7,5 @@ tools: ["procreate"]
 images:
 - "../../assets/play/technigala.png"
 - "../../assets/play/freshman issue cover.png"
-
+archive: true
 ---

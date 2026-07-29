@@ -7,6 +7,9 @@ export default {
 				mono: ['DM Mono']
 				// sans: ['neue-haas-unica']
 			},
+			fontSize: {
+				md: '1rem',
+			},
 			colors: {
 				'dark-green': '#095d40',
 				'hover-color': '#BB6D41',

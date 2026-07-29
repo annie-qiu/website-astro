@@ -5,7 +5,7 @@ description: Dartmouth
 year: '2024'
 tools: ['ui/ux', 'graphics', 'branding']
 images:
-  - "../../assets/projects/dali-website/dalilabcover.png"
+  - "../../assets/projects/dali-website/cover.png"
 ---
 ### Background
 

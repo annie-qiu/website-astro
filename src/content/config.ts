@@ -22,8 +22,11 @@ const project = defineCollection({
       year: z.string(),
       tools: z.array(z.string()),
       images: z.array(image()).optional(),
+      additionalImages: z.array(image()).optional(),
+      additionalImagesLayout: z.enum(["stack", "masonry"]).optional(),
       archive: z.boolean().optional(),
       video: z.string().optional(),
+      link: z.boolean().optional(),
     }),
 });
 

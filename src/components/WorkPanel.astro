@@ -7,6 +7,7 @@ interface GridItem {
   title: string;
   label: string;
   image?: ImageMetadata;
+  id?: string;
 }
 
 interface Project {
@@ -15,20 +16,24 @@ interface Project {
   images?: ImageMetadata[];
   detail: AstroComponentFactory;
   video?: string;
+  slug: string;
+  link?: boolean;
 }
 
 interface Props {
   id: string;
   title: string;
-  layout?: "grid" | "design" | "list";
+  layout?: "grid" | "design" | "list" | "masonry";
   items?: GridItem[];
   projects?: Project[];
+  class?: string;
+  lightbox?: boolean;
 }
 
-const { id, title: _title, layout = "grid", items, projects } = Astro.props as Props;
+const { id, title: _title, layout = "grid", items, projects, class: className, lightbox = false } = Astro.props as Props;
 ---
 
-<div id={id} class="work-panel max-w-4xl mt-8" data-work-panel hidden>
+<div id={id} class:list={["work-panel w-full lg:max-w-6xl", className]} data-work-panel hidden>
 
   {layout === "grid" && items?.length && (
     <div class="grid gap-3">
@@ -47,13 +52,60 @@ const { id, title: _title, layout = "grid", items, projects } = Astro.props as P
     </div>
   )}
 
+  {layout === "masonry" && items?.length && (
+    <div data-lightbox-grid class="columns-1 sm:columns-2 gap-4 sm:gap-8">
+      {items.map((item) => (
+        <a
+          href={item.href}
+          class="block break-inside-avoid mb-4 sm:mb-8 group"
+          data-lightbox-open={lightbox && item.id ? item.id : undefined}
+        >
+          {item.image && (
+            <Image
+              src={item.image}
+              alt={item.label}
+              class="w-full h-auto transition-opacity group-hover:opacity-70"
+            />
+          )}
+        </a>
+      ))}
+    </div>
+  )}
+
+  {layout === "masonry" && lightbox && items?.length && (
+    <div data-lightbox-root data-panel-id={id} class="hidden">
+      <div class="flex items-center justify-between text-xs text-gray-600 mb-4">
+        <button type="button" data-lightbox-close class="link">show all</button>
+        <div class="flex gap-4">
+          <button type="button" data-lightbox-prev class="hover:text-gray-800">&larr; prev</button>
+          <button type="button" data-lightbox-next class="hover:text-gray-800">next &rarr;</button>
+        </div>
+      </div>
+      {items.map((item) => item.id && (
+        <div data-lightbox-slide={item.id} class="hidden flex flex-col gap-2">
+          {item.image && (
+            <Image
+              src={item.image}
+              alt={item.label}
+              class="w-full max-h-[80vh] object-contain"
+            />
+          )}
+          <div class="flex flex-col gap-0">
+            <p class="text-sm text-gray-600 mb-0">{item.title}</p>
+            <p class="text-xs sans-serif text-gray-400 mb-0">{item.label}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
   {layout === "list" && items?.length && (
     <ul>
       {items.map((item) => (
-        <li class="py-2 text-xs sans-serif">
+        <li class="py-2 text-xs">
           {item.image && <Image class="mb-2" src={item.image} alt={item.label} />}
           <p>
-            <span class="serif text-sm text-gray-600">{item.title}, </span><span class="sans-serif text-xs text-gray-400">{item.label}</span>
+            <span class="text-sm text-gray-600">{item.title}, </span><span class="sans-serif text-xs text-gray-400">{item.label}</span>
           </p>
         </li>
       ))}
@@ -65,11 +117,17 @@ const { id, title: _title, layout = "grid", items, projects } = Astro.props as P
       {projects.map((project) => {
         const Detail = project.detail;
         return (
-          <div class="grid grid-cols-1 sm:grid-cols-[1fr_2fr] gap-6">
+          <div id={project.slug} class="grid grid-cols-1 gap-6 scroll-mt-6">
             <div>
-              <p class="text-md mb-2">{project.title}</p>
+              {project.link ? (
+                <p class="text-md mb-2">
+                <a href={`/projects/${project.slug}`} class="link">{project.title}</a>
+                </p>
+              ) : (
+                <p class="text-md mb-2">{project.title}</p>
+              )}
               <p class="text-xs sans-serif text-gray-400 font-weight-300">{project.description}</p>
-              <div class="text-xs text-gray-900 project-detail">
+              <div class="text-[0.8125rem] text-gray-500 leading-snug">
                 <Detail />
               </div>
             </div>
@@ -86,7 +144,7 @@ const { id, title: _title, layout = "grid", items, projects } = Astro.props as P
             )}
               <div class="flex-row gap-2 s">
                 {project.images?.length &&  project.images.map((img) => (
-                  <Image src={img} alt={project.title} class="w-full h-auto object-cover mb-6" />
+                  <Image src={img} alt={project.title} class="w-full max-h-[80vh] object-contain object-left mb-6" />
                 ))}
               </div>
 
@@ -99,3 +157,92 @@ const { id, title: _title, layout = "grid", items, projects } = Astro.props as P
 
   {!items?.length && !projects?.length && <slot />}
 </div>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-lightbox-root]").forEach((root) => {
+    const panelId = root.dataset.panelId!;
+    const panel = root.closest<HTMLElement>("[data-work-panel]");
+    const grid = panel?.querySelector<HTMLElement>("[data-lightbox-grid]");
+    const slides = root.querySelectorAll<HTMLElement>("[data-lightbox-slide]");
+
+    const leftPanel = document.getElementById("left-panel");
+
+    function open(itemId: string) {
+      let matched = false;
+      slides.forEach((slide) => {
+        const isMatch = slide.dataset.lightboxSlide === itemId;
+        slide.classList.toggle("hidden", !isMatch);
+        if (isMatch) matched = true;
+      });
+      if (!matched) return;
+      grid?.classList.add("hidden");
+      root.classList.remove("hidden");
+      leftPanel?.classList.add("hidden", "lg:flex");
+    }
+
+    function close() {
+      root.classList.add("hidden");
+      grid?.classList.remove("hidden");
+      leftPanel?.classList.remove("hidden", "lg:flex");
+    }
+
+    function currentIndex() {
+      return Array.from(slides).findIndex((slide) => !slide.classList.contains("hidden"));
+    }
+
+    function openByOffset(offset: number) {
+      const total = slides.length;
+      if (!total) return;
+      const nextIndex = ((currentIndex() + offset) % total + total) % total;
+      const itemId = slides[nextIndex].dataset.lightboxSlide;
+      if (!itemId) return;
+      open(itemId);
+      history.pushState(null, "", `#${panelId}/${itemId}`);
+    }
+
+    root.querySelector("[data-lightbox-prev]")?.addEventListener("click", () => openByOffset(-1));
+    root.querySelector("[data-lightbox-next]")?.addEventListener("click", () => openByOffset(1));
+
+    document.addEventListener("keydown", (e) => {
+      if (root.classList.contains("hidden")) return;
+      if (e.key === "ArrowLeft") openByOffset(-1);
+      if (e.key === "ArrowRight") openByOffset(1);
+    });
+
+    root.querySelector("[data-lightbox-close]")?.addEventListener("click", () => {
+      close();
+      history.pushState(null, "", `#${panelId}`);
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !root.classList.contains("hidden")) {
+        close();
+        history.pushState(null, "", `#${panelId}`);
+      }
+    });
+
+    document.querySelectorAll<HTMLElement>("[data-lightbox-open]").forEach((trigger) => {
+      if (trigger.closest("[data-work-panel]")?.id !== panelId) return;
+      trigger.addEventListener("click", (e: MouseEvent) => {
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const itemId = trigger.dataset.lightboxOpen;
+        if (!itemId) return;
+        e.preventDefault();
+        open(itemId);
+        history.pushState(null, "", `#${panelId}/${itemId}`);
+      });
+    });
+
+    function syncFromHash() {
+      const [hashPanel, hashItem] = window.location.hash.slice(1).split("/");
+      if (hashPanel === panelId && hashItem) {
+        open(hashItem);
+      } else {
+        close();
+      }
+    }
+
+    window.addEventListener("popstate", syncFromHash);
+    syncFromHash();
+  });
+</script>
