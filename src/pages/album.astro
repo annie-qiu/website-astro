@@ -1,0 +1,235 @@
+---
+import Layout from "../layouts/Layout.astro";
+import sharp from "sharp";
+
+const ARENA_CHANNEL_SLUG = "photos-zclxxvncxte";
+
+// Change this to adjust the default grid column count.
+const GRID_COLUMNS = 4;
+const COLUMN_CLASSES: Record<number, string> = {
+  3: "columns-3",
+  4: "columns-4",
+  5: "columns-5",
+};
+
+interface ArenaBlock {
+  id: number;
+  title: string;
+  class: string;
+  image?: { display: { url: string } };
+}
+
+async function fetchAllArenaImageBlocks(slug: string): Promise<ArenaBlock[]> {
+  const perPage = 100;
+  const headers: Record<string, string> = import.meta.env.ARENA_API_KEY
+    ? { Authorization: `Bearer ${import.meta.env.ARENA_API_KEY}` }
+    : {};
+
+  const blocks: ArenaBlock[] = [];
+  let page = 1;
+  while (true) {
+    const res = await fetch(
+      `https://api.are.na/v2/channels/${slug}/contents?page=${page}&per=${perPage}`,
+      { headers }
+    );
+    const data: { contents?: ArenaBlock[] } = await res.json();
+    const pageBlocks = data.contents ?? [];
+    blocks.push(...pageBlocks);
+    if (pageBlocks.length < perPage) break;
+    page++;
+  }
+  return blocks;
+}
+
+function rgbToHslHex(r: number, g: number, b: number): { hue: number; lightness: number; hex: string } {
+  const [rf, gf, bf] = [r / 255, g / 255, b / 255];
+  const max = Math.max(rf, gf, bf);
+  const min = Math.min(rf, gf, bf);
+  const lightness = (max + min) / 2;
+
+  let hue = 0;
+  if (max !== min) {
+    const d = max - min;
+    switch (max) {
+      case rf:
+        hue = ((gf - bf) / d + (gf < bf ? 6 : 0)) * 60;
+        break;
+      case gf:
+        hue = ((bf - rf) / d + 2) * 60;
+        break;
+      case bf:
+        hue = ((rf - gf) / d + 4) * 60;
+        break;
+    }
+  }
+
+  const hex = `#${[r, g, b].map((c) => c.toString(16).padStart(2, "0")).join("")}`;
+  return { hue, lightness, hex };
+}
+
+// Finds the most frequently occurring color (quantized into a coarse RGB
+// grid) rather than the mathematical mean, which tends to wash busy photos
+// out into a muddy average.
+async function getDominantColor(url: string): Promise<{ hue: number; lightness: number; hex: string }> {
+  const res = await fetch(url);
+  const buf = Buffer.from(await res.arrayBuffer());
+  const { data } = await sharp(buf)
+    .resize(50, 50, { fit: "fill" })
+    .removeAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+  const buckets = new Map<string, { count: number; rSum: number; gSum: number; bSum: number }>();
+
+  for (let i = 0; i < data.length; i += 3) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    // >> 5 quantizes each channel into 8 buckets (256 / 32)
+    const key = `${r >> 5}-${g >> 5}-${b >> 5}`;
+    const bucket = buckets.get(key) ?? { count: 0, rSum: 0, gSum: 0, bSum: 0 };
+    bucket.count++;
+    bucket.rSum += r;
+    bucket.gSum += g;
+    bucket.bSum += b;
+    buckets.set(key, bucket);
+  }
+
+  let dominant = { count: 0, rSum: 0, gSum: 0, bSum: 0 };
+  for (const bucket of buckets.values()) {
+    if (bucket.count > dominant.count) dominant = bucket;
+  }
+
+  return rgbToHslHex(
+    Math.round(dominant.rSum / dominant.count),
+    Math.round(dominant.gSum / dominant.count),
+    Math.round(dominant.bSum / dominant.count)
+  );
+}
+
+const blocks = await fetchAllArenaImageBlocks(ARENA_CHANNEL_SLUG);
+
+const images = await Promise.all(
+  blocks
+    .filter((block) => block.class === "Image" && block.image)
+    .map(async (block) => {
+      const url = block.image!.display.url;
+      const { hue, lightness, hex } = await getDominantColor(url);
+      return {
+        id: block.id,
+        url,
+        title: block.title,
+        hue,
+        lightness,
+        color: hex,
+      };
+    })
+);
+---
+
+<Layout title="photos">
+  <div><a class="" href="/">← home</a></div>
+  <br>
+  <div class="text-base mt-2 mb-4 text-center">photos</div>
+  <div class="flex gap-3 justify-center items-center mb-4 text-xs sans-serif text-gray-500">
+    {Object.keys(COLUMN_CLASSES).map((n) => (
+      <button
+        type="button"
+        data-columns={n}
+        class:list={["hover:text-gray-800", Number(n) === GRID_COLUMNS ? "text-gray-800" : "text-gray-400"]}
+      >
+        {n}
+      </button>
+    ))}
+    <span class="text-gray-300">|</span>
+    <button type="button" id="shuffle-button" class="text-gray-500 hover:text-gray-800">
+      shuffle
+    </button>
+    <span class="text-gray-300">|</span>
+    <button type="button" id="sort-hue-button" class="text-gray-500 hover:text-gray-800">
+      sort by hue
+    </button>
+    <button type="button" id="sort-brightness-button" class="text-gray-500 hover:text-gray-800">
+      sort by brightness
+    </button>
+  </div>
+  <br>
+  <div id="photo-grid" class:list={["container", COLUMN_CLASSES[GRID_COLUMNS], "max-w-[80em] m-auto gap-4"]}>
+    {images.map((image) => (
+      <div class="mb-4 container" data-caption={image.title || undefined} data-hue={image.hue} data-lightness={image.lightness} data-color={image.color}>
+        <img src={image.url} alt={image.title || "photo"} class="rounded-sm w-full" loading="lazy" />
+      </div>
+    ))}
+  </div>
+  <div id="image-tooltip" class="fixed z-50 hidden flex items-center gap-2 pointer-events-none max-w-[16rem] bg-white px-2 py-1 text-xs text-gray-600 shadow-md">
+    <span id="tooltip-swatch" class="inline-block w-1.5 h-1.5 flex-shrink-0"></span>
+    <span id="tooltip-text"></span>
+  </div>
+</Layout>
+
+<script>
+  const tooltip = document.getElementById("image-tooltip");
+  const tooltipSwatch = document.getElementById("tooltip-swatch");
+  const tooltipText = document.getElementById("tooltip-text");
+  const grid = document.getElementById("photo-grid");
+  const sizeButtons = document.querySelectorAll<HTMLButtonElement>("[data-columns]");
+
+  function setColumns(n: string) {
+    if (!grid) return;
+    Array.from(grid.classList)
+      .filter((c) => /^columns-\d+$/.test(c))
+      .forEach((c) => grid.classList.remove(c));
+    grid.classList.add(`columns-${n}`);
+
+    sizeButtons.forEach((button) => {
+      const isActive = button.dataset.columns === n;
+      button.classList.toggle("text-gray-800", isActive);
+      button.classList.toggle("text-gray-400", !isActive);
+    });
+  }
+
+  sizeButtons.forEach((button) => {
+    button.addEventListener("click", () => setColumns(button.dataset.columns!));
+  });
+
+  document.getElementById("shuffle-button")?.addEventListener("click", () => {
+    if (!grid) return;
+    const items = Array.from(grid.children);
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    items.forEach((item) => grid.appendChild(item));
+  });
+
+  document.getElementById("sort-hue-button")?.addEventListener("click", () => {
+    if (!grid) return;
+    const items = Array.from(grid.children) as HTMLElement[];
+    items.sort((a, b) => Number(a.dataset.hue) - Number(b.dataset.hue));
+    items.forEach((item) => grid.appendChild(item));
+  });
+
+  document.getElementById("sort-brightness-button")?.addEventListener("click", () => {
+    if (!grid) return;
+    const items = Array.from(grid.children) as HTMLElement[];
+    items.sort((a, b) => Number(a.dataset.lightness) - Number(b.dataset.lightness));
+    items.forEach((item) => grid.appendChild(item));
+  });
+
+  document.querySelectorAll<HTMLElement>("[data-caption]").forEach((el) => {
+    el.addEventListener("mouseenter", () => {
+      if (!tooltip || !el.dataset.caption) return;
+      if (tooltipText) tooltipText.textContent = el.dataset.caption;
+      if (tooltipSwatch) tooltipSwatch.style.backgroundColor = el.dataset.color ?? "transparent";
+      tooltip.classList.remove("hidden");
+    });
+    el.addEventListener("mousemove", (e: MouseEvent) => {
+      if (!tooltip) return;
+      tooltip.style.left = `${e.clientX + 12}px`;
+      tooltip.style.top = `${e.clientY + 12}px`;
+    });
+    el.addEventListener("mouseleave", () => {
+      tooltip?.classList.add("hidden");
+    });
+  });
+</script>
