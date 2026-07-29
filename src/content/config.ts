@@ -22,7 +22,14 @@ const project = defineCollection({
       year: z.string(),
       tools: z.array(z.string()),
       images: z.array(image()).optional(),
-      additionalImages: z.array(image()).optional(),
+      additionalImages: z
+        .array(
+          z.object({
+            src: image(),
+            caption: z.string().optional(),
+          })
+        )
+        .optional(),
       additionalImagesLayout: z.enum(["stack", "masonry"]).optional(),
       archive: z.boolean().optional(),
       video: z.string().optional(),

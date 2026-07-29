@@ -42,14 +42,18 @@ const { Content } = await project.render();
         {project.data.additionalImages?.length && (
           project.data.additionalImagesLayout === "masonry" ? (
             <div class="columns-2 gap-4 mt-8">
-              {project.data.additionalImages.map((img) => (
-                <Image src={img} alt={project.data.title} class="w-full h-auto break-inside-avoid mb-4" />
+              {project.data.additionalImages.map(({ src, caption }) => (
+                <div class="break-inside-avoid mb-4" data-caption={caption}>
+                  <Image src={src} alt={caption ?? project.data.title} class="w-full h-auto" />
+                </div>
               ))}
             </div>
           ) : (
             <div class="flex flex-col gap-6 mt-8">
-              {project.data.additionalImages.map((img) => (
-                <Image src={img} alt={project.data.title} class="w-full h-auto" />
+              {project.data.additionalImages.map(({ src, caption }) => (
+                <div data-caption={caption}>
+                  <Image src={src} alt={caption ?? project.data.title} class="w-full h-auto" />
+                </div>
               ))}
             </div>
           )
@@ -57,4 +61,25 @@ const { Content } = await project.render();
       </div>
     </div>
   </div>
+  <div id="image-tooltip" class="fixed z-50 hidden pointer-events-none max-w-[16rem] bg-white px-2 py-1 text-xs text-gray-600 shadow-md"></div>
 </Layout>
+
+<script>
+  const tooltip = document.getElementById("image-tooltip");
+
+  document.querySelectorAll<HTMLElement>("[data-caption]").forEach((el) => {
+    el.addEventListener("mouseenter", () => {
+      if (!tooltip || !el.dataset.caption) return;
+      tooltip.textContent = el.dataset.caption;
+      tooltip.classList.remove("hidden");
+    });
+    el.addEventListener("mousemove", (e: MouseEvent) => {
+      if (!tooltip) return;
+      tooltip.style.left = `${e.clientX + 12}px`;
+      tooltip.style.top = `${e.clientY + 12}px`;
+    });
+    el.addEventListener("mouseleave", () => {
+      tooltip?.classList.add("hidden");
+    });
+  });
+</script>
