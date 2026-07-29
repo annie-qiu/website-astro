@@ -11,7 +11,7 @@ images:
 
 Digital Applied Learning & Innovation (DALI) Lab is a space at Dartmouth I was greatly involved and invested in. My senior spring, I led a proposed re-design of DALI's website.
 
-The lab is a student-driven technology agencythat designs and builds early-stage mobile, web, and AR/VR products. Students are employed to work in teams to develop, design, and create solutions for a range of partners, including start-ups, research labs, and non-profits. At DALI, I have been a designer, developer, mentor, and a part of the lab's student leadership. 
+The lab is a student-driven technology agency that designs and builds early-stage mobile, web, and AR/VR products. Students are employed to work in teams to develop, design, and create solutions for a range of partners, including start-ups, research labs, and non-profits. At DALI, I have been a designer, developer, mentor, and a part of the lab's student leadership. 
 
 ![about](../../assets/projects/dali-website/about-dali.png)
 

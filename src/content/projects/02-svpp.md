@@ -9,4 +9,4 @@ images:
 ---
 A platform for Dartmouth students and staff to register for trainings and track progress towards a required 4-year sexual violence prevention curriculum, currently used by 4,000+ students and staff. 
 
-I conducted UX research to on student engagement, designed screens for student and admin portals, and used React and Ruby on Rails to build admin permissions.
+I conducted UX research on student engagement, designed screens for student and admin portals, and used React and Ruby on Rails to build admin permissions.

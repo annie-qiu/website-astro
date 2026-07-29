@@ -15,6 +15,8 @@ additionalImages:
 - "../../assets/play/freshman issue cover.png"
 - "../../assets/play/intern_open_studio.jpg"
 - "../../assets/play/the_d_cover.jpg"
+- "../../assets/play/ani_liu.jpg"
+- "../../assets/play/day_in_day_out.jpg"
 ---
 
 Digital illustrations, personal and commissioned.
