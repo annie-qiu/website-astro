@@ -2,19 +2,22 @@
 import Layout from "../layouts/Layout.astro";
 import sharp from "sharp";
 
-const ARENA_CHANNEL_SLUG = "photos-zclxxvncxte";
+const ARENA_CHANNEL_SLUG = "photo-blog-hefrs7ul0ta";
 
 // Change this to adjust the default grid column count.
 const GRID_COLUMNS = 4;
 const COLUMN_CLASSES: Record<number, string> = {
+  2: "columns-2",
   3: "columns-3",
   4: "columns-4",
   5: "columns-5",
+  6: "columns-6",
 };
 
 interface ArenaBlock {
   id: number;
   title: string;
+  generated_title: string;
   class: string;
   image?: { display: { url: string } };
 }
@@ -118,7 +121,7 @@ const images = await Promise.all(
       return {
         id: block.id,
         url,
-        title: block.title,
+        title: block.generated_title,
         hue,
         lightness,
         color: hex,
@@ -130,13 +133,20 @@ const images = await Promise.all(
 <Layout title="photos">
   <div><a class="" href="/">← home</a></div>
   <br>
-  <div class="text-base mt-2 mb-4 text-center">photos</div>
-  <div class="flex gap-3 justify-center items-center mb-4 text-xs sans-serif text-gray-500">
+  <div class="text-base mt-2 mb-4 text-center">photo blog</div>
+  <div class="flex flex-wrap gap-x-3 gap-y-2 justify-center items-center mb-4 text-xs sans-serif text-gray-500">
+    <button type="button" data-view="blog" class="hover:text-gray-800 text-gray-400">
+      1
+    </button>
     {Object.keys(COLUMN_CLASSES).map((n) => (
       <button
         type="button"
-        data-columns={n}
-        class:list={["hover:text-gray-800", Number(n) === GRID_COLUMNS ? "text-gray-800" : "text-gray-400"]}
+        data-view={n}
+        class:list={[
+          "hover:text-gray-800",
+          Number(n) === GRID_COLUMNS ? "text-gray-800" : "text-gray-400",
+          Number(n) >= 4 ? "hidden sm:inline-block" : "",
+        ]}
       >
         {n}
       </button>
@@ -146,53 +156,85 @@ const images = await Promise.all(
       shuffle
     </button>
     <span class="text-gray-300">|</span>
+    <span class="text-gray-400 whitespace-nowrap">sort by</span>
     <button type="button" id="sort-hue-button" class="text-gray-500 hover:text-gray-800">
-      sort by hue
+      hue
     </button>
+    <span class="text-gray-300">/</span>
     <button type="button" id="sort-brightness-button" class="text-gray-500 hover:text-gray-800">
-      sort by brightness
+      brightness
+    </button>
+    <span class="text-gray-300">/</span>
+    <button type="button" id="sort-alpha-button" class="text-gray-500 hover:text-gray-800">
+      a-z
     </button>
   </div>
   <br>
-  <div id="photo-grid" class:list={["container", COLUMN_CLASSES[GRID_COLUMNS], "max-w-[80em] m-auto gap-4"]}>
+  <div id="photo-grid" class:list={["container", COLUMN_CLASSES[GRID_COLUMNS], "max-w-[80em] m-auto gap-4 lg:gap-8"]}>
     {images.map((image) => (
-      <div class="mb-4 container" data-caption={image.title || undefined} data-hue={image.hue} data-lightness={image.lightness} data-color={image.color}>
-        <img src={image.url} alt={image.title || "photo"} class="rounded-sm w-full" loading="lazy" />
+      <div class="photo-item mb-4 lg:mb-8 container" data-caption={image.title || undefined} data-hue={image.hue} data-lightness={image.lightness} data-color={image.color}>
+        <img src={image.url} alt={image.title || "photo"} class="photo-img w-full" loading="lazy" />
+        <div class="photo-caption hidden items-center gap-2 text-xs text-gray-600">
+          <span class="photo-swatch inline-block w-2 h-2 flex-shrink-0 rounded-sm" style={`background-color: ${image.color}`}></span>
+          {image.title && <span>{image.title}</span>}
+        </div>
       </div>
     ))}
   </div>
   <div id="image-tooltip" class="fixed z-50 hidden flex items-center gap-2 pointer-events-none max-w-[16rem] bg-white px-2 py-1 text-xs text-gray-600 shadow-md">
-    <span id="tooltip-swatch" class="inline-block w-1.5 h-1.5 flex-shrink-0"></span>
     <span id="tooltip-text"></span>
   </div>
 </Layout>
 
 <script>
   const tooltip = document.getElementById("image-tooltip");
-  const tooltipSwatch = document.getElementById("tooltip-swatch");
   const tooltipText = document.getElementById("tooltip-text");
   const grid = document.getElementById("photo-grid");
-  const sizeButtons = document.querySelectorAll<HTMLButtonElement>("[data-columns]");
+  const viewButtons = document.querySelectorAll<HTMLButtonElement>("[data-view]");
 
-  function setColumns(n: string) {
+  let currentView = grid ? (Array.from(grid.classList).find((c) => /^columns-\d+$/.test(c))?.replace("columns-", "") ?? "4") : "4";
+
+  function gridClassName(view: string): string {
+    if (view === "blog") return "flex flex-col gap-4 lg:gap-8 max-w-xl m-auto";
+    const maxWidth = view === "2" ? "max-w-3xl" : view === "6" ? "max-w-4xl" : "max-w-[80em]";
+    return `container columns-${view} ${maxWidth} m-auto gap-4 lg:gap-8`;
+  }
+
+  function applyItemClasses(item: HTMLElement, view: string) {
+    const img = item.querySelector<HTMLImageElement>(".photo-img");
+    const caption = item.querySelector<HTMLElement>(".photo-caption");
+    const swatch = item.querySelector<HTMLElement>(".photo-swatch");
+    if (view === "blog") {
+      item.className = "photo-item flex items-center gap-3";
+      if (img) img.className = "photo-img w-16 h-16 object-cover flex-shrink-0";
+      if (caption) caption.className = "photo-caption flex items-center gap-2 text-sm";
+      if (swatch) swatch.className = "photo-swatch hidden";
+    } else {
+      item.className = "photo-item mb-4 lg:mb-8 container";
+      if (img) img.className = view === "6" ? "photo-img w-full aspect-square object-cover" : "photo-img w-full";
+      if (caption) caption.className = "photo-caption hidden";
+      if (swatch) swatch.className = "photo-swatch inline-block w-2 h-2 flex-shrink-0 rounded-sm";
+    }
+  }
+
+  function setView(view: string) {
     if (!grid) return;
-    Array.from(grid.classList)
-      .filter((c) => /^columns-\d+$/.test(c))
-      .forEach((c) => grid.classList.remove(c));
-    grid.classList.add(`columns-${n}`);
+    currentView = view;
+    grid.className = gridClassName(view);
+    Array.from(grid.children).forEach((item) => applyItemClasses(item as HTMLElement, view));
 
-    sizeButtons.forEach((button) => {
-      const isActive = button.dataset.columns === n;
+    viewButtons.forEach((button) => {
+      const isActive = button.dataset.view === view;
       button.classList.toggle("text-gray-800", isActive);
       button.classList.toggle("text-gray-400", !isActive);
     });
   }
 
-  sizeButtons.forEach((button) => {
-    button.addEventListener("click", () => setColumns(button.dataset.columns!));
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", () => setView(button.dataset.view!));
   });
 
-  document.getElementById("shuffle-button")?.addEventListener("click", () => {
+  function shuffleGrid() {
     if (!grid) return;
     const items = Array.from(grid.children);
     for (let i = items.length - 1; i > 0; i--) {
@@ -200,7 +242,10 @@ const images = await Promise.all(
       [items[i], items[j]] = [items[j], items[i]];
     }
     items.forEach((item) => grid.appendChild(item));
-  });
+  }
+
+  document.getElementById("shuffle-button")?.addEventListener("click", shuffleGrid);
+  shuffleGrid();
 
   document.getElementById("sort-hue-button")?.addEventListener("click", () => {
     if (!grid) return;
@@ -216,11 +261,17 @@ const images = await Promise.all(
     items.forEach((item) => grid.appendChild(item));
   });
 
+  document.getElementById("sort-alpha-button")?.addEventListener("click", () => {
+    if (!grid) return;
+    const items = Array.from(grid.children) as HTMLElement[];
+    items.sort((a, b) => (a.dataset.caption ?? "").localeCompare(b.dataset.caption ?? ""));
+    items.forEach((item) => grid.appendChild(item));
+  });
+
   document.querySelectorAll<HTMLElement>("[data-caption]").forEach((el) => {
     el.addEventListener("mouseenter", () => {
-      if (!tooltip || !el.dataset.caption) return;
+      if (currentView === "blog" || !tooltip || !el.dataset.caption) return;
       if (tooltipText) tooltipText.textContent = el.dataset.caption;
-      if (tooltipSwatch) tooltipSwatch.style.backgroundColor = el.dataset.color ?? "transparent";
       tooltip.classList.remove("hidden");
     });
     el.addEventListener("mousemove", (e: MouseEvent) => {
